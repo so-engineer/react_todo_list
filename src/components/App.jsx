@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import './App.css';
+import { useTodoList } from '../hooks/useTodoList';
 
 export const App = () => {
   const [text, setText] = useState('');
   const [updateText, setUpdateText] = useState('');
-  const [todos, setTodos] = useState([]);
+  const {todos, checkBox, addTodo, addUpdateTodo, updateTodo, deleteTodo} = useTodoList();
 
   const completedTodos = todos.filter((todo) => todo.completed);
 
@@ -17,48 +18,26 @@ export const App = () => {
   }
 
   const onChangeCheckBox = (index) => {
-    const newTodos = [...todos]
-    newTodos[index].completed = !newTodos[index].completed;
-    setTodos(newTodos);
+    checkBox(index);
   }
 
   const onClickAdd = () => {
-    if (text === '') return;
-    const todo = {
-      text: text,
-      completed: false,
-      updated: false,
-    }
-    const newTodos = [...todos, todo];
-    setTodos(newTodos);
+    addTodo(text);
     setText('');
-  }
+  };
 
   const onClickUpdateAdd = (index) => {
-    if (updateText === '') return;
-    const newTodos = [...todos]
-    const updateTodo = {
-      text: updateText,
-      completed: false,
-      updated: false,
-    }
-    newTodos[index] = updateTodo
-    setTodos(newTodos);
+    addUpdateTodo(updateText, index);
     setUpdateText('');
   }
 
-  const onClickUpdate = (index) => {
-    const newTodos = [...todos]
-    newTodos[index].updated = !newTodos[index].updated;
-    setTodos(newTodos);
-  }
+  const onClickUpdate = useCallback((index) => {
+    updateTodo(index)
+  }, [updateTodo]);
 
-  const onClickDelete = (index) => {
-    // alert('本当に削除してもよろしいですか？');
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
-  }
+  const onClickDelete = useCallback((index) => {
+    deleteTodo(index);
+  }, [deleteTodo]);
 
   return (
     <>
@@ -66,7 +45,7 @@ export const App = () => {
       <div>
         <input onChange= {onChangeText} type="text" value={text} placeholder="Add ToDo" />
         <button onClick={onClickAdd}>保存</button>
-        <div className>
+        <div>
           <ul>
           {todos.map((todo, index) => (
             <li key={index}>
