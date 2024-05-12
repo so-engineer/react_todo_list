@@ -1,15 +1,25 @@
 import { useCallback, useState } from "react";
 
 export const useTodoList = () => {
+  const [text, setText] = useState('');
+  const [updateText, setUpdateText] = useState('');
   const [todos, setTodos] = useState([]);
 
-  const checkBox = (index) => {
+  const onChangeText = (e) => {
+    setText(e.target.value);
+  }
+
+  const onChangeUpdateText = (e) => {
+    setUpdateText(e.target.value);
+  }
+
+  const onChangeCheckBox = useCallback((index) => {
     const newTodos = [...todos]
     newTodos[index].completed = !newTodos[index].completed;
     setTodos(newTodos);
-  }
+  }, [todos]);
 
-  const addTodo = (text) => {
+  const onClickAdd = useCallback(() => {
     if (text === '') return;
     const todo = {
       text: text,
@@ -18,9 +28,10 @@ export const useTodoList = () => {
     }
     const newTodos = [...todos, todo];
     setTodos(newTodos);
-  }
+    setText('');
+  }, [text, todos]);
 
-  const addUpdateTodo = (updateText, index) => {
+  const onClickUpdateAdd = useCallback((index) => {
     if (updateText === '') return;
     const newTodos = [...todos]
     const updateTodo = {
@@ -30,20 +41,25 @@ export const useTodoList = () => {
     }
     newTodos[index] = updateTodo
     setTodos(newTodos);
-  }
+    setUpdateText('');
+  }, [updateText, todos]);
 
-  const updateTodo = useCallback((index) => {
-    const newTodos = [...todos]
-    newTodos[index].updated = !newTodos[index].updated;
+  const onClickUpdate = useCallback((index) => {
+    const newTodos = todos.map((todo, i) => {
+      if (i === index) {
+        return {...todo, updated: true};
+      } else {
+        return {...todo, updated: false};
+    }});
     setTodos(newTodos);
   }, [todos]);
 
-  const deleteTodo = useCallback((index) => {
+  const onClickDelete = useCallback((index) => {
     alert('本当に削除してもよろしいですか？');
     const newTodos = [...todos];
     newTodos.splice(index, 1);
     setTodos(newTodos);
   }, [todos]);
 
-  return {todos, checkBox, addTodo, addUpdateTodo, updateTodo, deleteTodo};
+  return {text, updateText, todos, onChangeText, onChangeUpdateText, onChangeCheckBox, onClickAdd, onClickUpdateAdd, onClickUpdate, onClickDelete};
 }

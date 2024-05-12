@@ -1,43 +1,9 @@
-import { useCallback, useState } from 'react';
 import './App.css';
 import { useTodoList } from '../hooks/useTodoList';
 
 export const App = () => {
-  const [text, setText] = useState('');
-  const [updateText, setUpdateText] = useState('');
-  const {todos, checkBox, addTodo, addUpdateTodo, updateTodo, deleteTodo} = useTodoList();
-
+  const {text, updateText, todos, onChangeText, onChangeUpdateText, onChangeCheckBox, onClickAdd, onClickUpdateAdd, onClickUpdate, onClickDelete} = useTodoList();
   const completedTodos = todos.filter((todo) => todo.completed);
-
-  const onChangeText = (e) => {
-    setText(e.target.value);
-  }
-
-  const onChangeUpdateText = (e) => {
-    setUpdateText(e.target.value);
-  }
-
-  const onChangeCheckBox = (index) => {
-    checkBox(index);
-  }
-
-  const onClickAdd = () => {
-    addTodo(text);
-    setText('');
-  };
-
-  const onClickUpdateAdd = (index) => {
-    addUpdateTodo(updateText, index);
-    setUpdateText('');
-  }
-
-  const onClickUpdate = useCallback((index) => {
-    updateTodo(index)
-  }, [updateTodo]);
-
-  const onClickDelete = useCallback((index) => {
-    deleteTodo(index);
-  }, [deleteTodo]);
 
   return (
     <>
@@ -51,7 +17,7 @@ export const App = () => {
             <li key={index}>
               {todo.updated ? (
                 <>
-                  <input onChange= {onChangeUpdateText} type="text" value={updateText} placeholder="Update ToDo" />
+                  <input onChange={onChangeUpdateText} type="text" value={updateText} placeholder="Update ToDo" />
                   <button onClick={() => onClickUpdateAdd(index)}>保存</button>
                 </>
               ) : (
