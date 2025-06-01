@@ -6,8 +6,8 @@ export const App = () => {
   const completedTodos = todos.filter((todo) => todo.completed);
 
   return (
-    <>
-      <h1>ToDo List</h1>
+    <div className="container">
+      <h1 className="title">ToDo List</h1>
       <div>
         <input onChange= {onChangeText} type="text" value={text} placeholder="Add ToDo" />
         <button onClick={onClickAdd}>保存</button>
@@ -38,6 +38,6 @@ export const App = () => {
           <span>未完了: {todos.length - completedTodos.length}</span>
         </footer>
       </div>
-    </>
+    </div>
   )
 }
